@@ -45,7 +45,7 @@ export default async function DashboardPage() {
     <main className="min-h-screen bg-[#0a0a0f] text-[#e2e8f0]">
       <nav className="border-b border-[#1e1e2e] px-6 py-4">
         <span className="font-mono text-sm text-[#6366f1] font-semibold tracking-widest uppercase">
-          PR Pilot / Dashboard
+          Pilot by Santosh / Dashboard
         </span>
       </nav>
 
