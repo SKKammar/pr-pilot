@@ -217,6 +217,6 @@ async def _do_review(payload: dict, github: GitHubClient, gemini: GeminiClient, 
         total_issues=len(all_review_comments),
         reviewed_at=datetime.now(timezone.utc),
     )
-    await supabase.log_review(review_result, pr_title, pr_author)
+    await supabase.log_review(review_result, pr_title, pr_author, installation_id)
 
     print(f"[Reviewer] Done. {len(all_review_comments)} comments on PR #{pr_number}")

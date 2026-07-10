@@ -6,7 +6,7 @@ async function getReviews() {
     if (!supabase) return [];
     
     const { data } = await supabase
-      .from("reviews")
+      .from("pr_pilot_reviews")
       .select("*")
       .order("reviewed_at", { ascending: false })
       .limit(50);
@@ -23,11 +23,11 @@ async function getStats() {
     if (!supabase) return { totalReviews: 0, totalIssues: 0 };
     
     const { count: totalReviews } = await supabase
-      .from("reviews")
+      .from("pr_pilot_reviews")
       .select("*", { count: "exact", head: true });
       
     const { data: issueData } = await supabase
-      .from("reviews")
+      .from("pr_pilot_reviews")
       .select("total_issues");
       
     const totalIssues = issueData?.reduce((sum, r) => sum + r.total_issues, 0) ?? 0;
