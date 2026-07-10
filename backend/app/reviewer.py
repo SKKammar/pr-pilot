@@ -95,7 +95,7 @@ async def _do_review(payload: dict, github: GitHubClient, gemini: GeminiClient, 
             token, owner, repo_name, pr_number, commit_sha,
             comments=[],
             summary=(
-                f"⚠️ **PR Pilot skipped this review** — this PR has {total_lines} added lines "
+                f"⚠️ **Pilot by Santosh skipped this review** — this PR has {total_lines} added lines "
                 f"across {len(reviewable)} files, which exceeds the review threshold ({MAX_TOTAL_LINES} lines). "
                 "Consider breaking it into smaller PRs."
             ),
@@ -107,7 +107,7 @@ async def _do_review(payload: dict, github: GitHubClient, gemini: GeminiClient, 
         await github.create_review_with_comments(
             token, owner, repo_name, pr_number, commit_sha,
             comments=[],
-            summary="✅ **PR Pilot:** No reviewable files found (all files were generated, binary, or removed).",
+            summary="✅ **Pilot by Santosh:** No reviewable files found (all files were generated, binary, or removed).",
         )
         return
 
@@ -186,7 +186,7 @@ async def _do_review(payload: dict, github: GitHubClient, gemini: GeminiClient, 
     suggestion_count = sum(1 for c in all_review_comments if c.severity == "suggestion")
 
     summary_lines = [
-        "## 🤖 PR Pilot Review",
+        "## 🤖 Pilot by Santosh Review",
         "",
         f"Reviewed **{len(reviewable)} file(s)** | "
         f"🔴 {error_count} errors · 🟡 {warning_count} warnings · 🔵 {suggestion_count} suggestions",

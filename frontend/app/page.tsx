@@ -6,7 +6,7 @@ export default function HomePage() {
       {/* Nav */}
       <nav className="border-b border-[#1e1e2e] px-6 py-4 flex items-center justify-between">
         <span className="font-mono text-sm text-[#6366f1] font-semibold tracking-widest uppercase">
-          PR Pilot
+          Pilot by Santosh
         </span>
         <Link
           href="/dashboard"
@@ -31,13 +31,13 @@ export default function HomePage() {
         </h1>
 
         <p className="max-w-lg text-[#64748b] text-lg leading-relaxed">
-          PR Pilot reviews your pull requests the moment they open — 
+          Pilot by Santosh reviews your pull requests the moment they open — 
           spotting bugs, security issues, and logic errors before they reach main.
         </p>
 
         <div className="flex gap-4 mt-4">
           <a
-            href="https://github.com/apps/pr-pilot-app"
+            href="https://github.com/apps/pilot-by-santosh"
             className="px-6 py-3 bg-[#6366f1] text-white rounded-lg font-medium
                        hover:bg-[#4f46e5] transition-colors text-sm"
           >
