@@ -279,6 +279,82 @@ async def stats():
     return db.fetch_stats()
 
 
+@app.get("/api/repos")
+async def get_repos():
+    """Fetch all repositories where PR Pilot GitHub App is installed."""
+    from app.github_client import get_github_client
+    client = get_github_client()
+    try:
+        repos = await client.get_all_installed_repositories()
+        return {"count": len(repos), "repositories": repos}
+    except Exception as e:
+        logger.error(f"[api] Error fetching installed repositories: {e}")
+        return {"count": 0, "repositories": []}
+
+
+@app.post("/api/trigger-review")
+async def trigger_review(request: Request):
+    """
+    Manually trigger an AI review on any pull request.
+    Allows immediate testing and demonstration without waiting for GitHub webhooks.
+    """
+    data = await request.json()
+    repo_full_name = data.get("repo_full_name", "").strip()
+    pr_number = data.get("pr_number")
+
+    # If a full PR URL was pasted: e.g. https://github.com/owner/repo/pull/42
+    pr_url = data.get("pr_url", "").strip()
+    if pr_url:
+        import re
+        match = re.search(r"github\.com/([^/]+/[^/]+)/pull/(\d+)", pr_url)
+        if match:
+            repo_full_name = match.group(1)
+            pr_number = int(match.group(2))
+
+    if not repo_full_name or not pr_number:
+        raise HTTPException(status_code=400, detail="Must provide repo_full_name and pr_number, or a valid GitHub PR URL")
+
+    # Find installation ID for this repo
+    from app.github_client import get_github_client
+    client = get_github_client()
+    installations = await client.get_installations()
+    target_installation_id = None
+    for inst in installations:
+        inst_id = inst.get("id")
+        try:
+            token = await client.get_installation_token(inst_id)
+            meta = await client.get_pr_metadata(token, repo_full_name.split("/")[0], repo_full_name.split("/")[1], pr_number)
+            if meta:
+                target_installation_id = inst_id
+                break
+        except Exception:
+            continue
+
+    if not target_installation_id:
+        if installations:
+            target_installation_id = installations[0].get("id")
+        else:
+            raise HTTPException(status_code=404, detail=f"No active GitHub App installation found for {repo_full_name}")
+
+    payload = {
+        "action": "opened",
+        "pull_request": {
+            "number": pr_number,
+            "title": f"Manual Review on {repo_full_name}#{pr_number}",
+            "user": {"login": "manual-tester", "type": "User"},
+            "draft": False,
+        },
+        "repository": {
+            "full_name": repo_full_name,
+            "name": repo_full_name.split("/")[1] if "/" in repo_full_name else repo_full_name,
+        },
+        "installation": {"id": target_installation_id}
+    }
+    delivery_id = f"manual_{os.urandom(8).hex()}"
+    await process_pr_review(payload, delivery_id)
+    return {"status": "success", "message": f"Review triggered and logged for {repo_full_name}#{pr_number}", "delivery_id": delivery_id}
+
+
 @app.post("/webhook")
 @limiter.limit("60/minute")
 async def webhook(request: Request):

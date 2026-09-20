@@ -1,0 +1,342 @@
+[
+  {
+    "full_name": "SKKammar/SKKammar",
+    "name": "SKKammar",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/SKKammar",
+    "description": "My Profile README.md",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Tic-Tac-Toe",
+    "name": "Tic-Tac-Toe",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Tic-Tac-Toe",
+    "description": "A TIC-TAC-TOE game",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/communicate-using-markdown",
+    "name": "communicate-using-markdown",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/communicate-using-markdown",
+    "description": "Organize ideas and collaborate using Markdown, a lightweight language for text formatting.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/skills-communicate-using-markdown",
+    "name": "skills-communicate-using-markdown",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/skills-communicate-using-markdown",
+    "description": "My clone repository",
+    "open_issues_count": 1,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Snake-And-Ladder",
+    "name": "Snake-And-Ladder",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Snake-And-Ladder",
+    "description": "A Classic gmae with a little change ",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Silent-SOS-Beacon",
+    "name": "Silent-SOS-Beacon",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Silent-SOS-Beacon",
+    "description": "SOS for Women ",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/LocalInventoryManagementSystem",
+    "name": "LocalInventoryManagementSystem",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/LocalInventoryManagementSystem",
+    "description": "This repository contains a simple, console-based Inventory Management System written in Java. It allows users to perform standard CRUD operations on products, such as adding, updating, viewing, and deleting stock items. The application utilizes a MySQL database to securely and persistently store all the inventory data.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/forage-midas",
+    "name": "forage-midas",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/forage-midas",
+    "description": "Project repo for the JPMC Advanced Software Engineering Forage program",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/SpringBootDemo1",
+    "name": "SpringBootDemo1",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/SpringBootDemo1",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Anomaly-detection",
+    "name": "Anomaly-detection",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Anomaly-detection",
+    "description": "Unsupervised industrial anomaly detection using PatchCore (1.00 Image AUROC, 0.99 Pixel AUROC) on MVTec AD. Includes Flask web interface for real-time inference.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/safe-code-space",
+    "name": "safe-code-space",
+    "owner": "SKKammar",
+    "private": true,
+    "html_url": "https://github.com/SKKammar/safe-code-space",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/EDA-and-Insights",
+    "name": "EDA-and-Insights",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/EDA-and-Insights",
+    "description": "It is designed to demonstrate how to analyze datasets to uncover hidden patterns and generate actionable data-driven insights. The content typically includes code, Jupyter notebooks, and visualizations used for processing and interpreting raw data.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Titanic-Survival-Prediction",
+    "name": "Titanic-Survival-Prediction",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Titanic-Survival-Prediction",
+    "description": "This repository is an end-to-end machine learning project that predicts passenger survival on the Titanic using the classic Kaggle dataset. It benchmarks six different classification algorithms, handling everything from feature engineering and preprocessing to hyperparameter tuning.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/InventoryManagement",
+    "name": "InventoryManagement",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/InventoryManagement",
+    "description": "A secure, full-stack Inventory Management System built to track products and orders in real time using a decoupled Java Spring Boot API and a modern React frontend. It leverages a cloud-native PostgreSQL database on Supabase and features robust JWT-based authentication with role-based access control. The entire architecture is fully deployed.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/My-Portfolio",
+    "name": "My-Portfolio",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/My-Portfolio",
+    "description": "A modern developer portfolio designed to highlight my professional experience, technical skills, and featured full-stack projects. It serves as a central hub demonstrating my ability to build secure, end-to-end software solutions.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/DogNose",
+    "name": "DogNose",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/DogNose",
+    "description": "DogNose uses machine learning to identify dogs by their unique nose prints—like a fingerprint for canines. Just snap a photo to register or recognize a dog instantly and non-invasively. It's built with a FastAPI backend, Next.js frontend, and Supabase for data and vector storage. Simple, fast, and pet-friendly.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/UptimeGuard",
+    "name": "UptimeGuard",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/UptimeGuard",
+    "description": "UptimeGuard is a free, serverless uptime monitor built with Next.js and Supabase—it pings your URLs, tracks response times, and alerts you via Discord when something goes down, all with minimal cost using a cron-based architecture.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/pr-pilot",
+    "name": "pr-pilot",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/pr-pilot",
+    "description": "PR Pilot is a GitHub App that automatically reviews every pull request using Gemini 2.0 Flash—it fetches the diff, analyzes each file, and posts inline comments on exact lines like a senior engineer would, all in under 30 seconds.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/SecretShield",
+    "name": "SecretShield",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/SecretShield",
+    "description": "SecretShield is an automated GitHub Action that scans every push and pull request to detect secrets (API keys, tokens, credentials) and sensitive files before they can be committed to your repository.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/todo-api",
+    "name": "todo-api",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/todo-api",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/CodeMentor",
+    "name": "CodeMentor",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/CodeMentor",
+    "description": "CodeMentor is an AI coding assistant that teaches via Socratic questioning—asking guiding questions, not giving answers. It provides line-by-line explanations, structured code reviews with severity tags, and a learning progress graph, all powered by Next.js 15 and the Gemini API.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/ChurnOps",
+    "name": "ChurnOps",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/ChurnOps",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/COC-Themed-Portfolio",
+    "name": "COC-Themed-Portfolio",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/COC-Themed-Portfolio",
+    "description": "My Portfolio with the theme Clash Of Clans.",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Portfolio-NFSMW",
+    "name": "Portfolio-NFSMW",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Portfolio-NFSMW",
+    "description": "NFS themed",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Auth-Login",
+    "name": "Auth-Login",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Auth-Login",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/PoliteScraper",
+    "name": "PoliteScraper",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/PoliteScraper",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Household-Ledger",
+    "name": "Household-Ledger",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Household-Ledger",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/FlowMind",
+    "name": "FlowMind",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/FlowMind",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/Arbiter",
+    "name": "Arbiter",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/Arbiter",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/flyrank-capstone-widgetplatform",
+    "name": "flyrank-capstone-widgetplatform",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/flyrank-capstone-widgetplatform",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/GitView",
+    "name": "GitView",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/GitView",
+    "description": "For frontend practice",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/SpotifySupportAgent",
+    "name": "SpotifySupportAgent",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/SpotifySupportAgent",
+    "description": null,
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/GuestLens",
+    "name": "GuestLens",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/GuestLens",
+    "description": "A Consent-Based, On-Device Guest Record Continuity Assistant for Hotel Receptions",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  },
+  {
+    "full_name": "SKKammar/EmptyPage",
+    "name": "EmptyPage",
+    "owner": "SKKammar",
+    "private": false,
+    "html_url": "https://github.com/SKKammar/EmptyPage",
+    "description": "Empty",
+    "open_issues_count": 0,
+    "installation_id": 145600330
+  }
+]

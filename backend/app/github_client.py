@@ -29,11 +29,18 @@ def _load_private_key(explicit_key: Optional[str] = None) -> Optional[str]:
         # Try base64 decode
         try:
             decoded = base64.b64decode(env_key_clean).decode("utf-8")
-            if "BEGIN " in decoded:
+            if "BEGIN " in decoded and "PRIVATE KEY" in decoded:
                 return decoded
         except Exception:
             pass
-        return env_key_clean
+        # If env_key is a file path to a .pem file
+        if os.path.exists(env_key_clean) and os.path.isfile(env_key_clean):
+            try:
+                content = Path(env_key_clean).read_text(encoding="utf-8")
+                if "BEGIN " in content:
+                    return content
+            except Exception:
+                pass
 
     # 2. Check path env var or default workspace pem file
     key_path = os.environ.get("GITHUB_PRIVATE_KEY_PATH", "")
@@ -70,7 +77,7 @@ class GitHubClient:
         now = int(time.time())
         payload = {
             "iat": now - 60,      # issued 60s ago for clock skew buffer
-            "exp": now + 600,     # expires in 10 minutes
+            "exp": now + 500,     # expires in 500s (exp - iat = 560s <= 600s max allowed by GitHub)
             "iss": str(self.app_id),
         }
         return jwt.encode(payload, self.private_key, algorithm="RS256")
@@ -101,6 +108,60 @@ class GitHubClient:
         expires_at = time.time() + 3600
         self._installation_tokens[installation_id] = (token, expires_at)
         return token
+
+    async def get_installations(self) -> list[dict]:
+        """Fetch all installations of this GitHub App."""
+        jwt_token = self._generate_jwt()
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            resp = await client.get(
+                "https://api.github.com/app/installations",
+                headers={
+                    "Authorization": f"Bearer {jwt_token}",
+                    "Accept": "application/vnd.github+json",
+                    "X-GitHub-Api-Version": "2022-11-28",
+                },
+            )
+            if resp.status_code != 200:
+                logger.warning(f"[github] Could not fetch installations: {resp.status_code}")
+                return []
+            return resp.json()
+
+    async def get_all_installed_repositories(self) -> list[dict]:
+        """Fetch all repositories across all installations of the GitHub App."""
+        installations = await self.get_installations()
+        all_repos = []
+        async with httpx.AsyncClient(timeout=30.0) as client:
+            for inst in installations:
+                inst_id = inst.get("id")
+                if not inst_id:
+                    continue
+                try:
+                    token = await self.get_installation_token(inst_id)
+                    resp = await client.get(
+                        "https://api.github.com/installation/repositories",
+                        headers={
+                            "Authorization": f"Bearer {token}",
+                            "Accept": "application/vnd.github+json",
+                            "X-GitHub-Api-Version": "2022-11-28",
+                        },
+                        params={"per_page": 100},
+                    )
+                    if resp.status_code == 200:
+                        data = resp.json()
+                        for repo in data.get("repositories", []):
+                            all_repos.append({
+                                "full_name": repo.get("full_name"),
+                                "name": repo.get("name"),
+                                "owner": repo.get("owner", {}).get("login"),
+                                "private": repo.get("private", False),
+                                "html_url": repo.get("html_url"),
+                                "description": repo.get("description"),
+                                "open_issues_count": repo.get("open_issues_count", 0),
+                                "installation_id": inst_id,
+                            })
+                except Exception as e:
+                    logger.warning(f"[github] Could not fetch repos for installation {inst_id}: {e}")
+        return all_repos
 
     async def get_pr_diff(self, token: str, owner: str, repo: str, pr_number: int) -> str:
         """Fetch the raw unified diff of a PR using Accept: application/vnd.github.diff."""

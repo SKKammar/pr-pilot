@@ -10,48 +10,38 @@ import {
   Home, 
   Layers, 
   Menu, 
+  Search, 
   ShieldCheck, 
-  X 
+  Sparkles, 
+  X,
+  GitPullRequest,
+  Grid
 } from "lucide-react";
+import cachedRepositories from "@/data/repositories.json";
 
 function SidebarContent() {
-  const [repos, setRepos] = useState<string[]>([]);
+  const [repos, setRepos] = useState<string[]>(() => 
+    cachedRepositories.map((r) => r.full_name)
+  );
+  const [searchQuery, setSearchQuery] = useState("");
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [isDemoMode, setIsDemoMode] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const searchParams = useSearchParams();
+  const currentTab = searchParams?.get("tab") || "repos";
   const currentRepo = searchParams?.get("repo") || "all";
 
   useEffect(() => {
     async function loadRepos() {
-      const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
-      const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
-
-      if (!url || !key) {
-        setIsDemoMode(true);
-        setRepos(["SKKammar/pr-pilot", "facebook/react", "vercel/next.js", "pallets/flask"]);
-        return;
-      }
-
       try {
-        const { createClient } = await import("@supabase/supabase-js");
-        const supabase = createClient(url, key);
-        const { data, error } = await supabase
-          .from("pr_pilot_reviews")
-          .select("repo_full_name");
-        
-        if (error || !data || data.length === 0) {
-          setIsDemoMode(true);
-          setRepos(["SKKammar/pr-pilot", "facebook/react", "vercel/next.js", "pallets/flask"]);
-        } else {
-          const unique = Array.from(new Set(data.map((r) => r.repo_full_name).filter(Boolean))).sort() as string[];
-          setRepos(unique.length > 0 ? unique : ["SKKammar/pr-pilot"]);
+        const res = await fetch("/api/repos");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.repositories && data.repositories.length > 0) {
+            setRepos(data.repositories);
+          }
         }
-      } catch {
-        setIsDemoMode(true);
-        setRepos(["SKKammar/pr-pilot", "facebook/react", "vercel/next.js", "pallets/flask"]);
-      }
+      } catch {}
     }
 
     loadRepos();
@@ -60,11 +50,15 @@ function SidebarContent() {
   const selectRepo = (repoName: string) => {
     setMobileMenuOpen(false);
     if (repoName === "all") {
-      router.push("/dashboard");
+      router.push("/dashboard?tab=repos");
     } else {
-      router.push(`/dashboard?repo=${encodeURIComponent(repoName)}`);
+      router.push(`/dashboard?tab=reviews&repo=${encodeURIComponent(repoName)}`);
     }
   };
+
+  const filteredRepos = repos.filter((r) =>
+    r.toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
     <>
@@ -86,16 +80,16 @@ function SidebarContent() {
         </button>
       </header>
 
-      {/* Sidebar (Desktop + Mobile Drawer) */}
+      {/* Sidebar */}
       <aside
         className={`
           fixed md:sticky top-0 left-0 z-30 h-screen w-64 md:min-w-64 border-r border-[var(--border)] bg-[var(--surface)] flex flex-col justify-between transition-transform duration-200 ease-in-out
           ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
         `}
       >
-        <div className="flex flex-col overflow-y-auto">
+        <div className="flex flex-col flex-1 min-h-0">
           {/* Logo Header */}
-          <div className="p-5 border-b border-[var(--border)] hidden md:flex items-center justify-between">
+          <div className="p-5 border-b border-[var(--border)] hidden md:flex items-center justify-between shrink-0">
             <Link href="/" className="flex items-center gap-2.5 group">
               <div className="w-7 h-7 rounded-md bg-[var(--accent-dim)] border border-[var(--accent)]/40 flex items-center justify-center font-mono font-bold text-[var(--accent)] text-xs group-hover:scale-105 transition-transform">
                 PR
@@ -109,16 +103,31 @@ function SidebarContent() {
             </span>
           </div>
 
-          {/* Main Navigation */}
-          <nav className="p-4 space-y-1">
-            <div className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)] px-3 py-1.5">
-              Menu
-            </div>
+          {/* Navigation Links */}
+          <nav className="p-3 space-y-1 shrink-0">
             <Link
-              href="/dashboard"
+              href="/dashboard?tab=repos"
+              onClick={() => setMobileMenuOpen(false)}
+              className={`flex items-center justify-between px-3 py-2 rounded-lg text-xs font-mono transition-colors ${
+                currentTab === "repos" && currentRepo === "all"
+                  ? "bg-[var(--accent-dim)] text-[var(--accent)] font-medium border border-[var(--accent)]/30"
+                  : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
+              }`}
+            >
+              <div className="flex items-center gap-2.5">
+                <Grid className="w-4 h-4" />
+                <span>Repositories</span>
+              </div>
+              <span className="text-[10px] px-1.5 py-0.2 rounded bg-[var(--bg)] text-[var(--accent)] border border-[var(--border)]">
+                {repos.length}
+              </span>
+            </Link>
+
+            <Link
+              href="/dashboard?tab=reviews"
               onClick={() => setMobileMenuOpen(false)}
               className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-mono transition-colors ${
-                pathname === "/dashboard" && currentRepo === "all"
+                currentTab === "reviews" && currentRepo === "all"
                   ? "bg-[var(--accent-dim)] text-[var(--accent)] font-medium border border-[var(--accent)]/30"
                   : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
               }`}
@@ -133,7 +142,7 @@ function SidebarContent() {
               className="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-mono text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)] transition-colors"
             >
               <Home className="w-4 h-4" />
-              <span>Home & Demo</span>
+              <span>Home & Overview</span>
             </Link>
 
             <a
@@ -144,44 +153,58 @@ function SidebarContent() {
             >
               <div className="flex items-center gap-2.5">
                 <Github className="w-4 h-4" />
-                <span>Install GitHub App</span>
+                <span>GitHub App Config</span>
               </div>
               <ExternalLink className="w-3 h-3 text-[var(--text-muted)]" />
             </a>
           </nav>
 
-          {/* Repositories Filter */}
-          <div className="p-4 border-t border-[var(--border)]">
-            <div className="flex items-center justify-between px-3 py-1.5 mb-1">
+          {/* Repositories Section */}
+          <div className="p-3 border-t border-[var(--border)] flex flex-col flex-1 min-h-0">
+            <div className="flex items-center justify-between px-2 mb-2">
               <span className="text-[10px] font-mono uppercase tracking-wider text-[var(--text-muted)]">
-                Repositories
+                Your Repositories
               </span>
-              <span className="text-[10px] font-mono text-[var(--text-muted)]">
+              <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--bg)] text-[var(--accent)] border border-[var(--border)]">
                 {repos.length}
               </span>
             </div>
 
-            <div className="space-y-1">
+            {/* Quick Repo Search */}
+            <div className="relative mb-2">
+              <Search className="w-3 h-3 absolute left-2.5 top-1/2 -translate-y-1/2 text-[var(--text-muted)]" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Filter repositories..."
+                className="w-full pl-7 pr-2 py-1 text-xs font-mono bg-[var(--bg)] border border-[var(--border)] rounded-md text-[var(--text-primary)] placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--accent)] transition-colors"
+              />
+            </div>
+
+            {/* Scrollable Repo List */}
+            <div className="space-y-0.5 overflow-y-auto flex-1 pr-1">
               <button
                 onClick={() => selectRepo("all")}
-                className={`w-full text-left px-3 py-1.5 rounded-md text-xs font-mono transition-colors flex items-center justify-between ${
-                  currentRepo === "all"
+                className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors flex items-center justify-between ${
+                  currentRepo === "all" && currentTab === "repos"
                     ? "bg-[var(--accent-dim)] text-[var(--accent)] font-medium"
                     : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
                 }`}
               >
                 <span>All Repositories</span>
+                <span className="text-[10px] text-[var(--text-muted)]">{repos.length}</span>
               </button>
 
-              {repos.map((repo) => {
+              {filteredRepos.map((repo) => {
                 const shortName = repo.split("/")[1] || repo;
-                const isSelected = currentRepo === repo;
+                const isSelected = currentRepo.toLowerCase() === repo.toLowerCase();
                 return (
                   <button
                     key={repo}
                     onClick={() => selectRepo(repo)}
                     title={repo}
-                    className={`w-full text-left px-3 py-1.5 rounded-md text-xs font-mono transition-colors flex items-center gap-2 truncate ${
+                    className={`w-full text-left px-2.5 py-1.5 rounded text-xs font-mono transition-colors flex items-center gap-2 truncate ${
                       isSelected
                         ? "bg-[var(--accent-dim)] text-[var(--accent)] font-medium"
                         : "text-[var(--text-secondary)] hover:text-[var(--text-primary)] hover:bg-[var(--surface-hover)]"
@@ -196,16 +219,16 @@ function SidebarContent() {
           </div>
         </div>
 
-        {/* Sidebar Footer: System Status */}
-        <div className="p-4 border-t border-[var(--border)] bg-[var(--bg-subtle)]">
+        {/* Sidebar Footer */}
+        <div className="p-3 border-t border-[var(--border)] bg-[var(--bg-subtle)] shrink-0">
           <div className="flex items-center justify-between text-[11px] font-mono">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[var(--success)] animate-pulse" />
-              <span className="text-[var(--text-secondary)]">
-                {isDemoMode ? "Live Demo Mode" : "Supabase Connected"}
+              <span className="text-[var(--text-secondary)] truncate">
+                @SKKammar ({repos.length} Connected)
               </span>
             </div>
-            <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)]" />
+            <ShieldCheck className="w-3.5 h-3.5 text-[var(--accent)] shrink-0" />
           </div>
         </div>
       </aside>
