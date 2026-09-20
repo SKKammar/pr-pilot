@@ -73,29 +73,38 @@ FastAPI Webhook (Render)
 - PRs with > 2000 changed lines (posts a notice instead)
 - `package-lock.json`, `yarn.lock`, `*.min.js`, migrations, binaries
 
-## Local Setup
+## Local Setup & Quickstart
 
-### Backend
+### 🚀 One-Click Concurrent Startup (Windows)
+Double-click `run_dev.bat` or execute in PowerShell:
+```powershell
+.\run_dev.ps1
+```
+This automatically launches both the FastAPI backend (`http://127.0.0.1:8000`) and the Next.js dashboard (`http://localhost:3000`) in separate windows.
+
+---
+
+### Manual Startup
+
+#### 1. Backend (FastAPI + Gemini 2.0 Flash)
 ```bash
 cd backend
-python -m venv venv && source venv/bin/activate
+python -m venv venv && source venv/bin/activate  # On Windows: .\venv\Scripts\activate
 pip install -r requirements.txt
-cp .env.example .env   # fill in your keys
-uvicorn app.main:app --reload --port 8000
+uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
 
-### Frontend
+#### 2. Frontend (Next.js 15 + Tailwind CSS)
 ```bash
 cd frontend
 npm install
-cp .env.local.example .env.local   # fill in Supabase keys
 npm run dev
 ```
 
-### ngrok (for local webhook testing)
+#### 3. Webhook Testing (ngrok)
 ```bash
 ngrok http 8000
-# Paste the https URL into your GitHub App webhook settings
+# Paste the generated https URL into your GitHub App webhook settings
 ```
 
 ## Environment Variables
