@@ -1,23 +1,31 @@
+# Node
+node_modules/
+.next/
+out/
+build/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
 
 # IDE
-# Node
-# OS
-# Python
-*$py.class
-*.iml
-*.py[cod]
-.DS_Store
-.env
-.env*.local
 .idea/
-.next/
 .vscode/
+*.iml
+
+# OS
+.DS_Store
 Thumbs.db
-__pycache__/
-build/
-env/
-frontend/.env.local.example
-node_modules/
-out/
+
+# Secrets & Keys
+*.pem
+*.key
+.env
+.env*
+!.env.example
+!.env.local.example
+
 thepilotby santosh
-venv/
