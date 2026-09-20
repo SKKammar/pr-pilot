@@ -9,9 +9,11 @@ import {
   ArrowRight, 
   ExternalLink, 
   FolderGit2, 
-  GitPullRequest,
-  Search,
-  Zap
+  GitPullRequest, 
+  Search, 
+  Zap,
+  Terminal,
+  Server
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import cachedRepositories from "@/data/repositories.json";
@@ -35,15 +37,38 @@ export function ManualReviewTrigger({
   const [prUrl, setPrUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [progressStep, setProgressStep] = useState(0);
+  const [backendOnline, setBackendOnline] = useState<boolean | null>(null);
+  const [showBackendCmd, setShowBackendCmd] = useState(false);
   const [result, setResult] = useState<{ 
     success: boolean; 
     message: string; 
     repo?: string; 
     pr?: number;
     deliveryId?: string;
+    is_live?: boolean;
+    is_simulated?: boolean;
+    hint?: string;
   } | null>(null);
 
   const router = useRouter();
+
+  // Check backend status on load
+  useEffect(() => {
+    async function checkBackend() {
+      try {
+        const res = await fetch("/api/backend-status");
+        if (res.ok) {
+          const data = await res.json();
+          setBackendOnline(Boolean(data.online));
+        } else {
+          setBackendOnline(false);
+        }
+      } catch {
+        setBackendOnline(false);
+      }
+    }
+    checkBackend();
+  }, []);
 
   // Keep selectedRepo in sync if defaultRepo changes
   useEffect(() => {
@@ -85,13 +110,16 @@ export function ManualReviewTrigger({
       setProgressStep(4);
 
       const data = await res.json();
-      if (res.ok) {
+      if (res.ok || data.status === "success") {
         setResult({
           success: true,
-          message: data.message || "Review successfully completed and posted!",
+          message: data.message || "Review successfully completed!",
           repo: selectedRepo,
           pr: parseInt(prNumber, 10) || 1,
           deliveryId: data.delivery_id,
+          is_live: data.is_live,
+          is_simulated: data.is_simulated,
+          hint: data.hint,
         });
         if (onSuccess) onSuccess();
       } else {
@@ -112,7 +140,7 @@ export function ManualReviewTrigger({
 
   return (
     <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5 shadow-sm text-left">
-      {/* Header & Mode Switcher */}
+      {/* Header & Status Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 mb-4">
         <div className="flex items-center gap-2 font-mono text-xs">
           <div className="w-5 h-5 rounded bg-[var(--accent-dim)] flex items-center justify-center text-[var(--accent)]">
@@ -120,7 +148,28 @@ export function ManualReviewTrigger({
           </div>
           <span className="font-semibold text-[var(--text-primary)]">Instant Review Runner</span>
           <span className="text-[var(--text-muted)]">•</span>
-          <span className="text-[var(--text-secondary)]">Run Gemini 2.0 Flash on demand</span>
+          
+          {/* Backend Status indicator */}
+          <button
+            type="button"
+            onClick={() => setShowBackendCmd(!showBackendCmd)}
+            className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded text-[10px] font-mono transition-colors hover:bg-[var(--bg)]"
+            title="Click to toggle backend startup instructions"
+          >
+            {backendOnline === true ? (
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
+                <span className="text-[var(--success)]">Backend Online (Port 8000)</span>
+              </>
+            ) : backendOnline === false ? (
+              <>
+                <span className="w-1.5 h-1.5 rounded-full bg-[var(--warning)]" />
+                <span className="text-[var(--warning)]">Backend Offline (Click for command)</span>
+              </>
+            ) : (
+              <span className="text-[var(--text-muted)]">Checking backend...</span>
+            )}
+          </button>
         </div>
 
         {/* Tab switchers */}
@@ -149,6 +198,30 @@ export function ManualReviewTrigger({
           </button>
         </div>
       </div>
+
+      {/* Backend Command Accordion if toggled */}
+      {showBackendCmd && (
+        <div className="mb-4 p-3 rounded-lg bg-[var(--bg)] border border-[var(--border)] text-xs font-mono space-y-2">
+          <div className="flex items-center justify-between text-[11px] text-[var(--text-secondary)]">
+            <span className="flex items-center gap-1.5 font-medium text-[var(--text-primary)]">
+              <Terminal className="w-3.5 h-3.5 text-[var(--accent)]" />
+              Run PR Pilot Python Backend:
+            </span>
+            <button
+              onClick={() => setShowBackendCmd(false)}
+              className="text-[10px] text-[var(--text-muted)] hover:text-[var(--text-primary)]"
+            >
+              Close
+            </button>
+          </div>
+          <div className="p-2 rounded bg-black/40 text-[var(--accent)] select-all overflow-x-auto text-[11px]">
+            cd backend && .\venv\Scripts\uvicorn app.main:app --port 8000
+          </div>
+          <p className="text-[10px] text-[var(--text-muted)]">
+            PR Pilot automatically uses demo evaluation mode if the local Python server is not active.
+          </p>
+        </div>
+      )}
 
       {/* Form Input */}
       <form onSubmit={handleTrigger} className="space-y-3">
@@ -293,7 +366,9 @@ export function ManualReviewTrigger({
         <div
           className={`mt-3.5 p-3.5 rounded-lg text-xs font-mono flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 ${
             result.success
-              ? "bg-[var(--success-dim)] text-[var(--success)] border border-[var(--success)]/30"
+              ? result.is_simulated
+                ? "bg-[var(--warning-dim)] text-[var(--warning)] border border-[var(--warning)]/30"
+                : "bg-[var(--success-dim)] text-[var(--success)] border border-[var(--success)]/30"
               : "bg-[var(--error-dim)] text-[var(--error)] border border-[var(--error)]/30"
           }`}
         >
@@ -305,9 +380,9 @@ export function ManualReviewTrigger({
             )}
             <div>
               <div className="font-semibold">{result.message}</div>
-              {result.success && (
-                <div className="text-[11px] opacity-90 mt-0.5">
-                  Autonomous review logged and ready for evaluation.
+              {result.hint && (
+                <div className="text-[11px] opacity-90 mt-1">
+                  💡 {result.hint}
                 </div>
               )}
             </div>

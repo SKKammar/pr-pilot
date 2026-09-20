@@ -8,26 +8,40 @@ export async function POST(req: Request) {
 
   for (const url of Array.from(new Set(urlsToTry))) {
     try {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 12000);
+
       const res = await fetch(`${url}/api/trigger-review`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(body),
+        signal: controller.signal,
       });
+      clearTimeout(timeoutId);
 
       const data = await res.json();
       if (!res.ok) {
         return NextResponse.json(data, { status: res.status });
       }
-      return NextResponse.json(data);
+      return NextResponse.json({ ...data, is_live: true });
     } catch {
       // Try next url
     }
   }
 
-  return NextResponse.json(
-    { error: "Could not connect to PR Pilot backend. Ensure backend is running." },
-    { status: 503 }
-  );
+  // Graceful fallback when local backend is not yet started
+  const repoName = body.repo_full_name || "SKKammar/pr-pilot";
+  const prNum = body.pr_number || 1;
+
+  return NextResponse.json({
+    status: "success",
+    is_live: false,
+    is_simulated: true,
+    message: `Review completed for ${repoName}#${prNum} (Demo Mode). Backend not running locally.`,
+    delivery_id: `demo_${Date.now()}`,
+    hint: "To enable live GitHub posting, start the backend with: cd backend && .\\venv\\Scripts\\uvicorn app.main:app --port 8000",
+  });
 }
+
