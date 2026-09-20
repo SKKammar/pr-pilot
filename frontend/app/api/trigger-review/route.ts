@@ -1,8 +1,13 @@
 import { NextResponse } from "next/server";
 
 export async function POST(req: Request) {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
-  const urlsToTry = [backendUrl, "http://127.0.0.1:8000", "http://localhost:8000"];
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://pr-pilot-backend.onrender.com";
+  const urlsToTry = [
+    backendUrl,
+    "https://pr-pilot-backend.onrender.com",
+    "http://127.0.0.1:8000",
+    "http://localhost:8000",
+  ];
 
   const body = await req.json();
 

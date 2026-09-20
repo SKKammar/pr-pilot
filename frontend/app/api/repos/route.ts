@@ -13,11 +13,16 @@ export interface RepositoryItem {
 }
 
 export async function GET() {
-  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "http://127.0.0.1:8000";
+  const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || "https://pr-pilot-backend.onrender.com";
 
   // Try backend first for live updates
   try {
-    const urlsToTry = [backendUrl, "http://127.0.0.1:8000", "http://localhost:8000"];
+    const urlsToTry = [
+      backendUrl,
+      "https://pr-pilot-backend.onrender.com",
+      "http://127.0.0.1:8000",
+      "http://localhost:8000",
+    ];
     for (const url of Array.from(new Set(urlsToTry))) {
       try {
         const controller = new AbortController();

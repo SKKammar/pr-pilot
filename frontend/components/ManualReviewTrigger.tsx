@@ -52,6 +52,8 @@ export function ManualReviewTrigger({
 
   const router = useRouter();
 
+  const [backendUrl, setBackendUrl] = useState<string>("");
+
   // Check backend status on load
   useEffect(() => {
     async function checkBackend() {
@@ -60,6 +62,7 @@ export function ManualReviewTrigger({
         if (res.ok) {
           const data = await res.json();
           setBackendOnline(Boolean(data.online));
+          if (data.url) setBackendUrl(data.url);
         } else {
           setBackendOnline(false);
         }
@@ -159,7 +162,9 @@ export function ManualReviewTrigger({
             {backendOnline === true ? (
               <>
                 <span className="w-1.5 h-1.5 rounded-full bg-[var(--success)] animate-pulse" />
-                <span className="text-[var(--success)]">Backend Online (Port 8000)</span>
+                <span className="text-[var(--success)]">
+                  {backendUrl.includes("render.com") ? "Cloud Backend Online (Render)" : "Backend Online (Port 8000)"}
+                </span>
               </>
             ) : backendOnline === false ? (
               <>
